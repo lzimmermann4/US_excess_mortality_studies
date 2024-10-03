@@ -507,7 +507,7 @@ for(i in 1:B){
 
 # Compute monthly estimates for each bootstrap iteration (1,000 iter.)
 boot_monthly <- boot_excess_out%>%
-  dplyr::mutate(month_year=format(as.Date(end_date), "%Y-%m"))%>%
+  dplyr::mutate(month_year=format(as.Date(date_yr_mnth), "%Y-%m"))%>%
   dplyr:: rename( monthly_expected = expected_boot,
                   monthly_excess = excess_boot)
 
