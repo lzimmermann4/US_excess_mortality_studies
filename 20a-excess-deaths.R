@@ -300,7 +300,7 @@ get_excess_deaths <- function(df, expected_deaths_model, frequency="weekly", cal
     train_df <- df %>% 
       filter(week != "53") %>%
       bind_rows(week_53_df) %>%
-      filter(end_date < as.Date("2020-03-01")) %>%
+      filter(end_date <= as.Date("2019-12-31")) %>%
       mutate(total_deaths_per_day = total_deaths / days)
     expected_deaths_model <- lm(expected_deaths_formula,train_df)
     expected_deaths <- df %>% filter(year >= 2020) %>%
@@ -310,7 +310,7 @@ get_excess_deaths <- function(df, expected_deaths_model, frequency="weekly", cal
     
     # Train an Economist monthly or quarterly model
     train_df <- df %>% 
-      filter(end_date < as.Date("2020-03-01")) %>%
+      filter(end_date <= as.Date("2019-12-31")) %>%
       mutate(total_deaths_per_day = total_deaths / days)
     expected_deaths_model <- lm(expected_deaths_formula,train_df)
     expected_deaths <- df %>% filter(year >= 2020) %>%
