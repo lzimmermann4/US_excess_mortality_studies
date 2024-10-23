@@ -1,4 +1,4 @@
 # US_excess_mortality_studies
   
-This repository contains the code files and data files for the manuscript "Post-pandemic excess mortality estimates in the United States in 2022 and 2023 using multiple statistical methods."
+This repository contains the code and output files for the manuscript "United States excess mortality estimates for 2022 and 2023 using multiple statistical methods: Cautions against extrapolation."
   
