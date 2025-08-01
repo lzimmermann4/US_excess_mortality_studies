@@ -120,6 +120,7 @@ exp_obs_bymonthyear$gamma_delta <- NA
 num_samples <- 10000
 
 ## Predict expected monthly mortality in 2020-2021
+set.seed(123)
 for(i in 1:max(exp_obs_bymonthyear$country_num)){
   whichs <- which(exp_obs_bymonthyear$country_num == i)
   temp <- exp_obs_bymonthyear[whichs, ]
@@ -1169,3 +1170,4 @@ ihme_yearly <- results_monthly%>%
 
 write.csv(ihme_yearly,file=paste0(outdir,"ihme_yearly.csv"), row.names = FALSE)
 write.csv(ihme_monthly,file=paste0(outdir,"ihme_monthly.csv"), row.names = FALSE)
+
