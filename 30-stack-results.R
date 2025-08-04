@@ -356,14 +356,76 @@ for(m in list_all_methods){
 }
 
 tbl_yrly <- res_yearly %>%
-  mutate(excess_estimate = paste0(round(excess/1000,1),"K (",round(excess_lower95/1000,1), "K, ",round(excess_upper95/1000,1),"K)")) %>%
+  mutate(excess_estimate = paste0(round(excess/1000,0),"K (",round(excess_lower95/1000,0), "K, ",round(excess_upper95/1000,0),"K)")) %>%
   select(method, year, excess_estimate) %>%
   arrange(method, desc(year))
 
 write.csv(tbl_yrly,file=paste0(outdir,"Table_2.csv"), row.names = FALSE)
 
 tbl_monthly <- res_monthly %>%
-  mutate(excess_estimate = paste0(round(excess/1000,1),"K (",round(excess_lower95/1000,1), "K, ",round(excess_upper95/1000,1),"K)")) %>%
+  mutate(excess_estimate = paste0(round(excess/1000,0),"K (",round(excess_lower95/1000,0), "K, ",round(excess_upper95/1000,0),"K)")) %>%
   select(method, year, month, excess_estimate)
 
+
 write.csv(tbl_monthly,file=paste0(outdir,"Table_S1.csv"), row.names = FALSE)
+
+### Figure with Yearly Estimates
+dat_plot_y <- res_yearly %>%
+  mutate(Study = case_when(method == "who" ~ "World Health Organization",
+                           method == "economist" ~ "The Economist",
+                           method == "harvard" ~ "Acosta and Irizarry",
+                           method == "harvard sensitivity" ~ "Acosta and Irizarry Sensitivity Results",
+                           method == "ihme" ~ "Institute for Health Metrics and Evaluation",
+                           method == "wmd" ~ "World Mortality Dataset",
+                           method == "cdc" ~ "Centers for Disease Control and Prevention",
+                           TRUE ~ "Missing"))
+
+list_study = c(
+  "Institute for Health Metrics and Evaluation",
+  "World Health Organization",
+  "The Economist",
+  "Acosta and Irizarry",
+  "Centers for Disease Control and Prevention",
+  "World Mortality Dataset"
+)
+dat_plot_y$Study <- factor(dat_plot_y$Study, levels = list_study)
+
+color_list_y <- c("Institute for Health Metrics and Evaluation"="#66c2a5",
+                "World Health Organization"="#8da0cb",
+                "The Economist"="#fc8d62",
+                "Acosta and Irizarry"="navy",
+                "Centers for Disease Control and Prevention"="grey60",
+                "World Mortality Dataset"="#b80f0a")
+
+library(scales)
+
+forest_p <- ggplot(filter(dat_plot_y,dat_plot_y$year>=2022 & dat_plot_y$method != "harvard sensitivity"), aes(x = excess, y = method, color = Study)) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = excess_lower95, xmax = excess_upper95), height = 0.3, show.legend = F) +
+  facet_wrap(~year, ncol = 1, strip.position = "left") +
+  theme_minimal(base_size = 13) +
+  labs(
+    title = "",
+    x = "Excess Death Estimate (95% UI)",
+    y = "",
+    color = ""
+  ) +
+  scale_x_continuous(breaks=scales::breaks_pretty(n = 5),labels = label_number(suffix = "K", scale = 1e-3)) +
+  scale_color_manual(values = color_list_y) +
+  theme(
+    strip.text.y.left = element_text(angle = 90, size = 13),
+    strip.placement = "outside",
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.position = c(0.99, 0.03),
+    legend.justification = c(1, 0),
+    legend.background = element_rect(fill = "white", color = "gray80"),
+    legend.box.background = element_rect(color = "gray80"),
+    legend.title=element_blank(),
+    legend.text=element_markdown()
+  ) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "gray50")
+
+png(file=paste0(outdir,"Figure_Forest_Plot.png"), height = 2400, width = 2700,  res = 300)
+forest_p
+dev.off()
