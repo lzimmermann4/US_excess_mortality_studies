@@ -1,0 +1,1 @@
+Initialize folder for data queried on the specified date.
