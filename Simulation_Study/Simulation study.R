@@ -26,7 +26,7 @@ options(ggplot2.discrete.colour= okabe_ito_palette) ; options(ggplot2.discrete.f
 
 
 #### SIMULATION FUNCTIONS ####
-# simulate_mortality is the main simulation function.
+# simulate_mortality is the main simulation function. Its shell was generated using Claude on Yale's Clarity AI and was then extensively edited.
 # simulate_mortality_hypo and _hypo2 change elements of the function:
 # hypo1 has a younger age structure, perturbed cause-specific mortality, no summer peak, and a 5% inccrease in COVID impact.
 # hypo2 has an older age structure, perturbed cause-specific mortality, and a 2% decrease in COVID impact.
